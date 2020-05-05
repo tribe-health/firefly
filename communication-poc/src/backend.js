@@ -33,7 +33,8 @@ function __dispatchAsync (args) {
       delete window[rejectId]
     }
     
-    __dispatch({ ...args, resolveId, rejectId })
+    const message = Object.assign({}, args, { resolveId, rejectId })
+    __dispatch(message)
   })
 }
 

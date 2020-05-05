@@ -21,6 +21,7 @@
     "@capacitor/cli": "^2.0.2",
     "@capacitor/core": "^2.0.2",
     "sirv-cli": "^0.4.4",
-    "tauri": "^0.5.2"
+    "tauri": "^0.5.2",
+    "text-encoding": "^0.7.0"
   }
 }
