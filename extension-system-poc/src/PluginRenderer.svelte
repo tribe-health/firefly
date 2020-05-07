@@ -1,10 +1,15 @@
 <script>
   import Plugin from './plugin'
-  export let pluginName
+	export let pluginName
+	export let pluginJson
 
-	const plugin = new Plugin(pluginName)
-
-	let model = plugin.model
+	let plugin, model, error
+	try {
+		plugin = new Plugin(pluginName, pluginJson)
+		model = plugin.model
+	} catch (e) {
+		error = e
+	}
 
 	/**
 	 * formats a content, replacing {{ someProperty }} with plugin.model.someProperty
@@ -17,9 +22,13 @@
 </script>
 
 <main>
-	{#each plugin.layout as item}
-	<svelte:component this={item.component} {...item.props} events={item.events}>
-		{ formatContent(item, $model) }
-	</svelte:component>
-	{/each}
+	{#if error}
+		<span style="color: red">{ error }</span>
+	{:else}
+		{#each plugin.layout as item}
+		<svelte:component this={item.component} {...item.props} events={item.events}>
+			{ formatContent(item, $model) }
+		</svelte:component>
+		{/each}
+	{/if}
 </main>

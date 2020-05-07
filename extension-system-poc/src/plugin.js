@@ -1,5 +1,4 @@
 import { getAddress } from './api'
-import pluginJson from './plugin.json'
 
 import { writable } from 'svelte/store'
 
@@ -12,36 +11,66 @@ const components = {
 
 const permissionStorage = {}
 
-function __mapLayoutItem (item) {
-  // transform each event string to its API call
-  const events = {}
-  if (item.events) {
-    for (const event in item.events) {
-      const { call, assignTo } = item.events[event]
-      events[event] = call in this
-        ? () => this[call]().then(r => this.model.update(m => ({ ...m, [assignTo]: r })))
-        : () => {
-          throw new Error(`${value} is not a valid API function`)
-        }
-    }
-  }
-
-  return {
-    ...item,
-    component: components[item.component],
-    children: item.children && item.children.map(__mapLayoutItem.bind(this)),
-    events
-  }
-}
-
 const PERMISSION_DENIED = 'Permission denied'
 
 export default class Plugin {
-  constructor (pluginId) {
+  constructor (pluginId, pluginJson) {
     this.pluginId = pluginId
     this.model = writable({})
 
-    this.layout = pluginJson.layout.map(__mapLayoutItem.bind(this))
+    this.__checkValue('layout', pluginJson.layout, { type: 'array', required: true })
+    this.layout = pluginJson.layout.map(item => this.__mapLayoutItem(item))
+  }
+
+  __checkValue (propName, value, { type, required }, messagePrefix = `Plugin ${this.pluginId}:`) {
+    if (required && !value) {
+      throw new Error(`${messagePrefix} doesn't have a '${propName}' property`)
+    }
+    if (value !== void 0 && !(type === 'array' ? Array.isArray(value) : typeof value === type)) {
+      throw new Error(`${messagePrefix} ${propName} must be a ${type}`)
+    }
+  }
+
+  __mapLayoutItem (item) {
+    this.__checkValue('component', item.component, { type: 'string', required: true })
+    this.__checkValue('children', item.childre, { type: 'array' })
+    this.__checkValue('events', item.events, { type: 'object' })
+    this.__checkValue('props', item.props, { type: 'object' })
+
+    // transform each event string to its API call
+    const events = {}
+    if (item.events) {
+      for (const event in item.events) {
+        const { call, assignTo } = item.events[event]
+
+        this.__checkValue('call', call, { type: 'string', required: true }, `Plugin ${this.pluginId}: event ${event}`)
+        this.__checkValue('assignTo', assignTo, { type: 'string' }, `Plugin ${this.pluginId}: event ${event}`)
+
+        events[event] = call in this && !call.startsWith('__')
+          ? () => this[call]().then(r => {
+            if (assignTo) {
+              this.model.update(m => ({
+                ...m,
+                [assignTo]: r
+              }))
+            }
+          })
+          : () => {
+            throw new Error(`Plugin ${this.pluginId}: ${value} is not a valid API function`)
+          }
+      }
+    }
+
+    if (!(item.component in components)) {
+      throw new Error(`Plugin ${this.pluginId}: unknown component ${item.component}`)
+    }
+
+    return {
+      ...item,
+      component: components[item.component],
+      children: item.children && item.children.map(this.__mapLayoutItem),
+      events
+    }
   }
 
   /**
@@ -60,7 +89,7 @@ export default class Plugin {
     }
 
     const granted = confirm(message)
-    if (!(pluginId in permissionStorage)) {
+    if (!(this.pluginId in permissionStorage)) {
       permissionStorage[this.pluginId] = {}
     }
     permissionStorage[this.pluginId][apiName] = granted
