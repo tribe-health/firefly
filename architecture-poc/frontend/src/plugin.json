@@ -9,7 +9,7 @@
       "content": "Button text",
       "events": {
         "click": {
-          "call": "getAddress",
+          "call": "generateAddress",
           "assignTo": "address"
         }
       }

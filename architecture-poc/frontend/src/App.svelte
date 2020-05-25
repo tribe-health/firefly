@@ -16,7 +16,7 @@
 		}
 
 		(['sample', 'invalid-component', 'unset-component']).forEach(id => {
-			window.installPlugin(id)
+			window.installPlugin && window.installPlugin(id)
 				.then(json => {
 					if (!externalPlugins.some(p => p.id === id)) {
 						externalPlugins = [...externalPlugins, {

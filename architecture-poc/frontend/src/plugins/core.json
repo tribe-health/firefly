@@ -1,0 +1,37 @@
+{
+  "layout": [{
+      "component": "Text",
+      "content": "Address: {{ address }}"
+    },
+    {
+      "component": "Button",
+      "content": "Generate address",
+      "events": {
+        "click": {
+          "call": "generateAddress",
+          "args": ["RVORZ9SIIP9RCYMREUIXXVPQIPHVCNPQ9HZWYKFWYWZRE9JQKG9REPKIASHUUECPSQO9JT9XNMVKWYGVA"],
+          "assignTo": "address"
+        }
+      }
+    },
+    {
+      "component": "Text",
+      "content": "Node info: {{ nodeInfo }}"
+    }, {
+      "component": "Button",
+      "content": "Get node info",
+      "events": {
+        "click": {
+          "call": "getNodeInfo",
+          "assignTo": "nodeInfo"
+        }
+      }
+    }
+  ],
+  "hooks": {
+    "created": {
+      "call": "addNode",
+      "args": ["https://nodes.comnet.thetangle.org"]
+    }
+  }
+}

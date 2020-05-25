@@ -1,0 +1,5 @@
+/node_modules/
+/public/build/
+/public/wallet_lib.wasm
+/public/iota_client.wasm
+.DS_Store

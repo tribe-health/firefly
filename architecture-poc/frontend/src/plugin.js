@@ -1,4 +1,4 @@
-import { getAddress } from './api'
+import * as api from './api'
 
 import { writable } from 'svelte/store'
 
@@ -20,6 +20,7 @@ export default class Plugin {
 
     this.__checkValue('layout', pluginJson.layout, { type: 'array', required: true })
     this.layout = pluginJson.layout.map(item => this.__mapLayoutItem(item))
+    this.hooks = pluginJson.hooks || {}
   }
 
   __checkValue (propName, value, { type, required }, messagePrefix = `Plugin ${this.pluginId}:`) {
@@ -29,6 +30,22 @@ export default class Plugin {
     if (value !== void 0 && !(type === 'array' ? Array.isArray(value) : typeof value === type)) {
       throw new Error(`${messagePrefix} ${propName} must be a ${type}`)
     }
+  }
+
+  __getCallRunner (callObj) {
+    const { call, assignTo, args } = callObj
+    return call in this && !call.startsWith('__') ?
+      () => this[call].apply(this, args).then(r => {
+        if (assignTo) {
+          this.model.update(m => ({
+            ...m,
+            [assignTo]: r
+          }))
+        }
+      }) :
+      () => {
+        throw new Error(`Plugin ${this.pluginId}: ${call} is not a valid API function`)
+      }
   }
 
   __mapLayoutItem (item) {
@@ -41,23 +58,12 @@ export default class Plugin {
     const events = {}
     if (item.events) {
       for (const event in item.events) {
-        const { call, assignTo } = item.events[event]
+        const callObj = item.events[event]
 
-        this.__checkValue('call', call, { type: 'string', required: true }, `Plugin ${this.pluginId}: event ${event}`)
-        this.__checkValue('assignTo', assignTo, { type: 'string' }, `Plugin ${this.pluginId}: event ${event}`)
+        this.__checkValue('call', callObj.call, { type: 'string', required: true }, `Plugin ${this.pluginId}: event ${event}`)
+        this.__checkValue('assignTo', callObj.assignTo, { type: 'string' }, `Plugin ${this.pluginId}: event ${event}`)
 
-        events[event] = call in this && !call.startsWith('__')
-          ? () => this[call]().then(r => {
-            if (assignTo) {
-              this.model.update(m => ({
-                ...m,
-                [assignTo]: r
-              }))
-            }
-          })
-          : () => {
-            throw new Error(`Plugin ${this.pluginId}: ${value} is not a valid API function`)
-          }
+        events[event] = this.__getCallRunner(callObj)
       }
     }
 
@@ -103,6 +109,16 @@ export default class Plugin {
     return this.pluginId.startsWith('@iota/')
   }
 
+  __runHook(hookName) {
+    if (hookName in this.hooks) {
+      const hook = this.hooks[hookName]
+      this.__checkValue('call', hook.call, { type: 'string', required: true }, `Plugin ${this.pluginId}: hook ${hookName}`)
+      this.__checkValue('assignTo', hook.assignTo, { type: 'string' }, `Plugin ${this.pluginId}: hook ${hookName}`)
+      const runner = this.__getCallRunner(hook)
+      runner()
+    }
+  }
+
   /**
    * an example API that's only available for core plugins
    */
@@ -114,13 +130,27 @@ export default class Plugin {
   }
 
   /**
-   * getAddress public API
+   * generateAddress public API
    * permission must be granted by the user
+   * 
+   * @param {String} seed
    */
-  getAddress () {
-    if (this.__checkUserPermission('getAddress', `${this.pluginId} wants access to an address. Do you allow it?`)) {
-      return getAddress()
+  generateAddress (seed) {
+    if (this.__checkUserPermission('generateAddress', `${this.pluginId} wants to generate an adress. Do you allow it?`)) {
+      return api.generateAddress(seed)
     }
     return Promise.reject(PERMISSION_DENIED)
+  }
+
+  /**
+   * add node
+   * @param {String} uri
+   */
+  addNode (uri) {
+    return api.addNode(uri)
+  }
+
+  getNodeInfo () {
+    return api.getNodeInfo()
   }
 }

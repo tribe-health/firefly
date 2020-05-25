@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
+import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -49,7 +50,19 @@ export default {
 		// instead of npm run dev), minify
 		production && terser(),
 
-		json()
+		json(),
+
+		copy({
+			targets: [{
+				src: 'node_modules/iota-rs-wasm/wasm-web/iota_wasm_bg.wasm',
+				dest: 'public',
+				rename: 'iota_client.wasm'
+			}, {
+				src: 'node_modules/wallet-lib/wasm-web/wallet_lib_bg.wasm',
+				dest: 'public',
+				rename: 'wallet_lib.wasm'
+			}]
+		})
 	],
 	watch: {
 		clearScreen: false
