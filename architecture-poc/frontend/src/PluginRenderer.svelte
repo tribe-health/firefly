@@ -7,11 +7,10 @@
 	try {
 		plugin = new Plugin(pluginName, pluginJson)
 		model = plugin.model
+		plugin.__runHook('created')
 	} catch (e) {
 		error = e
 	}
-
-	plugin.__runHook('created')
 
 	/**
 	 * formats a content, replacing {{ someProperty }} with plugin.model.someProperty
