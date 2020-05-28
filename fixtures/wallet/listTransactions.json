@@ -1,0 +1,39 @@
+{
+    "info": {
+        "name": "listTransactions",
+        "description": "List persisted/stored transactions",
+        "async": true
+    },
+    "parameters": [{
+        "name": "count",
+        "description": "Number of (most recent) transactions",
+        "required": false,
+        "type": "number",
+        "default": 10
+    }, {
+        "name": "from",
+        "description": "Subset of transactions. For example: count = 10, from = 5, it should return ten transactions skipping the most recent 5 transactions",
+        "required": false,
+        "type": "number"
+    }],
+    "response": {
+        "success": {
+            "name": "transactions",
+            "description": "Subset of persisted/stored transactions",
+            "type": "ref#https://github.com/iotaledger/wallet-spec/fixtures/wallet/schemas/Transaction.json"
+        },
+        "errors": [{
+            "description": "Invalid 'from' parameter provided. Should be a positive integer"
+        }]
+    },
+    "security": {
+        "description": "Security considerations for this method",
+        "userAuthentication": true
+    },
+    "related": {
+        "description": "Links to related fixtures",
+        "urls": [
+            "https://github.com/iotaledger/wallet-spec/fixtures/wallet/setAlias.json"
+        ]
+    }
+}

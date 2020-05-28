@@ -1,0 +1,44 @@
+{
+    "info": {
+        "name": "Transaction",
+        "description": "Transaction schema"
+    },
+    "properties": {
+        "hash": {
+            "type": "string",
+            "description": "Transaction hash"
+        },
+        "signatureMessageFragment": {
+            "type": "string",
+            "description": "Signature of the private key"
+        },
+        "address": {
+            "type": "string",
+            "description": "Transaction address"
+        },
+        "value": {
+            "type": "ref#https://github.com/iotaledger/wallet-spec/fixtures/wallet/schemas/Value.json",
+            "description": "Transaction amount"
+        },
+        "tag": {
+            "type": "ref#https://github.com/iotaledger/wallet-spec/fixtures/wallet/schemas/Tag.json",
+            "description": "Transaction tag"
+        },
+        "timestamp": {
+            "type": "number",
+            "description": "Transaction timestamp in unix timestamp format"
+        },
+        "trunkTransaction": {
+            "type": "string",
+            "description": "Transaction trunk transaction"
+        },
+        "branchTransaction": {
+            "type": "string",
+            "description": "Transaction branch transaction"
+        },
+        "nonce": {
+            "type": "string",
+            "description": "Transaction nonce"
+        }
+    }
+}

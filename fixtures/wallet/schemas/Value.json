@@ -1,0 +1,32 @@
+{
+    "info": {
+        "name": "Value",
+        "description": "Transaction value schema"
+    },
+    "properties": {
+        "withDenomination": {
+            "type": "function",
+            "description": "Transaction value with denomination",
+            "async": false,
+            "response": {
+                "success": {
+                    "description": "Transaction value with denomination",
+                    "type": "string"
+                },
+                "errors": []
+            }
+        },
+        "withoutDenomination": {
+            "type": "function",
+            "description": "Transaction value without denomination",
+            "async": false,
+            "response": {
+                "success": {
+                    "description": "Transaction value without denomination",
+                    "type": "number"
+                },
+                "errors": []
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "info": {
+        "name": "Tag",
+        "description": "Transaction tag schema"
+    },
+    "properties": {
+        "asTrytes": {
+            "type": "function",
+            "description": "Transaction tag in trytes format",
+            "async": false,
+            "response": {
+                "success": {
+                    "description": "Transaction tag in trytes",
+                    "type": "string"
+                },
+                "errors": []
+            }
+        },
+        "asAscii": {
+            "type": "function",
+            "description": "Transaction tag in ascii format",
+            "async": false,
+            "response": {
+                "success": {
+                    "description": "Transaction tag in ascii format",
+                    "type": "string"
+                },
+                "errors": []
+            }
+        }
+    }
+}
