@@ -1,0 +1,11 @@
+[package]
+name = "wallet-actor-system"
+version = "0.1.0"
+authors = ["Lucas Nogueira <lucas.nogueira@iota.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bastion = { path = "../../bastion/src/bastion" }
+once_cell = "1.4.0"
