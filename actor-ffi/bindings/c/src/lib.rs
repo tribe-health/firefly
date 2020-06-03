@@ -14,8 +14,6 @@ pub extern "C" fn send_message(message: *const c_char, callback: Callback) {
     let message = c_message.to_str().unwrap();
     send_actor_message(message, move |response| {
         let c_response = CString::new(response).expect("failed to convert response to CString");
-        unsafe {
-            callback(c_response.as_ptr());
-        }
+        callback(c_response.as_ptr());
     });
 }

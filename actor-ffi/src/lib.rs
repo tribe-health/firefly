@@ -83,6 +83,4 @@ pub fn send_message<F: 'static + Fn(String) + Send + Sync>(message: &'static str
             send_message_internal(children, system.wallet_actor_ref.elems()[0].clone(), message, callback)
         })
         .expect("failed to create message actor");
-    // TODO remove this
-    Bastion::block_until_stopped();
 }

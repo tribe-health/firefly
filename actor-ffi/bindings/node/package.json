@@ -1,0 +1,17 @@
+{
+  "name": "wallet-actor-system-node-binding",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ffi-napi": "^3.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^7.2.0"
+  }
+}
