@@ -1,0 +1,14 @@
+{
+  "appId": "com.example.app",
+  "appName": "svelte-app",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "public",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {},
+  "linuxAndroidStudioPath": "/usr/bin/android-studio"
+}
