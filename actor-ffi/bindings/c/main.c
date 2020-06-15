@@ -4,12 +4,13 @@
 #include <unistd.h>
 
 void callback(const char *message) {
-  printf(message);
+  printf("C response message received: %s\n", message);
   fflush(stdout);
 }
 
 int main() {
-  send_message("C message", callback);
-  sleep(4); // dumb way to wait for the callback to run
+  init();
+  send_message("message from C", callback);
+  send_message("second message from C", callback);
   return 0;
 }
