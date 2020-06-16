@@ -19,6 +19,7 @@ package org.iota.wallet;
 public class Main {
     
     public static void main(String[] args) {
+        Wallet.init();
         Wallet.sendMessage("message from Java", response -> {
             System.out.println("response: " + response);
         });

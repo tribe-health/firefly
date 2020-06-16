@@ -1,16 +1,21 @@
-const { Library, Callback } = require('ffi-napi')
-const { join } = require('path')
+const {
+  Library,
+  Callback
+} = require('ffi-napi')
+const {
+  join
+} = require('path')
 
-const lib = Library(join(__dirname, '../c/target/debug/libwallet'), {
+const lib = Library(join(__dirname, '../c/target/release/libwallet'), {
   init: ['void', []],
   send_message: ['void', ['string', 'pointer']]
 })
 
 module.exports = {
-  init () {
+  init() {
     lib.init()
   },
-  sendMessage (message) {
+  sendMessage(message) {
     return new Promise(resolve => {
       let callback = Callback('void', ['string'], response => {
         resolve(response)
