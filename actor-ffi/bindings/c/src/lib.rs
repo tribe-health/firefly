@@ -18,8 +18,7 @@ pub extern "C" fn send_message(message: *const c_char, callback: Callback) {
     };
     let message = c_message.to_str().unwrap();
 
-    smol::block_on(send_actor_message(message.to_string(), move |response| {
-        let c_response = CString::new(response).expect("failed to convert response to CString");
-        callback(c_response.as_ptr());
-    }));
+    let response = smol::block_on(send_actor_message(message.to_string()));
+    let c_response = CString::new(response).expect("failed to convert response to CString");
+    callback(c_response.as_ptr());
 }

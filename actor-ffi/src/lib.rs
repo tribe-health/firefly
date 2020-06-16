@@ -26,13 +26,12 @@ pub async fn init() {
         .await;
 }
 
-pub async fn send_message<F: 'static + Fn(String) + Send + Sync>(message: String, callback: F) {
+pub async fn send_message(message: String) -> String {
     // loop to make sure the runtime has been initialized before sending messages
     loop {
         match send_to(Actor::Account, message.clone()).await {
             Ok(response) => {
-                callback(response.unwrap_or("".to_string()));
-                break;
+                return response.unwrap_or("".to_string());
             }
             Err(_) => {}
         }
