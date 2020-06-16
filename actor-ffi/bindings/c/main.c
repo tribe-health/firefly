@@ -10,7 +10,9 @@ void callback(const char *message) {
 
 int main() {
   init();
-  send_message("message from C", callback);
-  send_message("second message from C", callback);
+  int i;
+  for (i = 0; i < 100000; i++) {
+    send_message("message from C", callback);
+  }
   return 0;
 }

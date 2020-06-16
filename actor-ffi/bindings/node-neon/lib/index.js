@@ -5,8 +5,14 @@ module.exports = {
     addon.init()
   },
   sendMessage(message) {
-    return new Promise(resolve => {
-      addon.sendMessage(message, resolve)
+    return new Promise((resolve, reject) => {
+      addon.sendMessage(message, (err, res) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(res)
+        }
+      })
     })
   }
 }
