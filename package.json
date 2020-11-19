@@ -1,0 +1,4 @@
+{
+  "private": true,
+  "workspaces": ["src/desktop", "src/mobile", "src/shared"]
+}
