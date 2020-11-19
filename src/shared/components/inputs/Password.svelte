@@ -1,5 +1,5 @@
 <script>
-    import { Icon } from '@shared-components'
+    import { Icon } from '../'
     export let value = ''
     export let classes = ''
     export let strength = 0

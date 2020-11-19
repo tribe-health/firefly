@@ -1,5 +1,5 @@
 <script>
-    import {Box, Text} from '@shared-components'
+    import {Box, Text} from '../'
 
     export let selected = false
     export let option

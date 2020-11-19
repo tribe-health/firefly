@@ -1,8 +1,8 @@
 <script lang="typescript">
     import { createEventDispatcher } from 'svelte'
     import { Backup, RecoveryPhrase, VerifyRecoveryPhrase, BackupToFile, Success } from './views/'
-    import { mnemonic } from '@shared-lib/app'
-    import { strongholdPassword } from '@shared-lib/app'
+    import { mnemonic } from 'shared/lib/app'
+    import { strongholdPassword } from 'shared/lib/app'
 
     export let locale
     export let mobile
