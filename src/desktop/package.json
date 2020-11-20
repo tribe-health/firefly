@@ -7,6 +7,7 @@
   "author": "IOTA Foundation <contact@iota.org>",
   "license": "Apache-2.0",
   "scripts": {
+    "postinstall": "electron-build-env --electron 9.1.0 -- yarn build-binding",
     "build-binding": "node ./scripts/build-binding",
     "start": "npm-run-all -p start:dev start:electron",
     "start:dev": "NODE_ENV=development rollup --config --watch",
