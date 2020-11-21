@@ -1,4 +1,4 @@
 {
   "private": true,
-  "workspaces": ["src/desktop", "src/mobile", "src/shared"]
+  "workspaces": ["src/desktop", "src/mobile", "src/shared", "src/backend/bindings/node"]
 }
