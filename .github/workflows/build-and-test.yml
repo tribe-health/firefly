@@ -1,0 +1,47 @@
+name: Build and run tests
+
+on:
+  push:
+    # branches:
+    #   - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  frontend-desktop:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    
+    - name: Install Rust stable toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+      
+    - name: Install required packages
+      run: |
+        sudo apt update
+        sudo apt install gcc-multilib g++-multilib build-essential
+
+    - name: Install backend dependencies
+      run: cargo build
+      working-directory: backend
+    
+    - name: Install desktop frontend dependencies
+      run: |
+        cd frontend/shared
+        yarn
+        cd ../desktop
+        yarn
+      
+    - name: Bundle desktop JS
+      run: yarn build
+      working-directory: frontend/src/desktop
