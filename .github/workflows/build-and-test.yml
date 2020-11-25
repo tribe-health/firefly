@@ -36,6 +36,8 @@ jobs:
       - name: Install Rust dependencies
         run: cargo build
         working-directory: backend
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: true
 
       - name: Build Node.js bindings
         run: yarn
