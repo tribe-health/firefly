@@ -14,8 +14,7 @@ jobs:
 
     steps:
       - name: Set up Git auth
-        run: |
-          git config --global url."https://token:$PAT@github.com/iotaledger/actors.rs".insteadOf "https://github.com/iotaledger/actors.rs"
+        run: git config --global url."https://token:$PAT@github.com/iotaledger/actors.rs".insteadOf "https://github.com/iotaledger/actors.rs"
         env:
           PAT: ${{ secrets.PAT }}
 
@@ -78,13 +77,16 @@ jobs:
     - name: Install backend dependencies
       run: cargo build
       working-directory: backend
+      env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: true
+    
+    - name: Install shared frontend dependencies
+      run: yarn
+      working-directory: frontend/src/shared
     
     - name: Install desktop frontend dependencies
-      run: |
-        cd frontend/shared
-        yarn
-        cd ../desktop
-        yarn
+      run: yarn
+      working-directory: frontend/src/desktop
       
     - name: Bundle desktop JS
       run: yarn build
