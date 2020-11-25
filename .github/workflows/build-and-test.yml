@@ -9,6 +9,36 @@ on:
       - develop
 
 jobs:
+  backend-node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      
+      - name: Install Rust stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: Install Rust dependencies
+        run: cargo build
+        working-directory: backend
+
+      - name: Build Node.js bindings
+        run: yarn
+        working-directory: backend/bindings/node
+
+      - name: Run tests
+        run: yarn test
+        working-directory: backend/bindings/node
+        
+      
   frontend-desktop:
     runs-on: ubuntu-latest
 
