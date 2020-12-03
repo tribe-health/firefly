@@ -30,16 +30,17 @@ jobs:
         with:
           toolchain: stable
           override: true
+          profile: minimal
 
       - name: Build Node.js bindings
         run: yarn
-        working-directory: backend/bindings/node
+        working-directory: packages/backend/bindings/node
         env:
           CARGO_NET_GIT_FETCH_WITH_CLI: true
 
       - name: Run tests
         run: yarn test
-        working-directory: backend/bindings/node
+        working-directory: packages/backend/bindings/node
         
       
   frontend-desktop:
@@ -68,21 +69,12 @@ jobs:
       run: |
         sudo apt update
         sudo apt install gcc-multilib g++-multilib build-essential
-
-    - name: Install backend dependencies
-      run: cargo build
-      working-directory: backend
-      env:
+    
+    - name: Install dependencies
+      run: yarn
+      env: 
           CARGO_NET_GIT_FETCH_WITH_CLI: true
-    
-    - name: Install shared frontend dependencies
-      run: yarn
-      working-directory: frontend/src/shared
-    
-    - name: Install desktop frontend dependencies
-      run: yarn
-      working-directory: frontend/src/desktop
       
     - name: Bundle desktop JS
       run: yarn build
-      working-directory: frontend/src/desktop
+      working-directory: packages/desktop
