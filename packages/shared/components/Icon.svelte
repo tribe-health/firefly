@@ -4,7 +4,7 @@
     export let height = undefined
     export let classes = ''
     export let boxed = false
-    export let boxClasses = 'undefined'
+    export let boxClasses = undefined
     $: selected = icons[icon]
     const icons = {
         parchment: {
