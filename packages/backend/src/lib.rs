@@ -1,17 +1,15 @@
 mod actors;
 use actors::{dispatch, WalletActor, WalletMessage};
 
-use iota_wallet::{
-    actor::ResponseType,
-    event::{
-        on_balance_change, on_broadcast, on_confirmation_state_change, on_error,
-        on_new_transaction, on_reattachment,
-    },
-    WalletError,
+use iota_wallet::event::{
+    on_balance_change, on_broadcast, on_confirmation_state_change, on_error, on_new_transaction,
+    on_reattachment,
 };
 use once_cell::sync::OnceCell;
 use riker::actors::*;
 use serde::{Deserialize, Serialize};
+use iota::common::logger::logger_init;
+pub use iota::common::logger::LoggerConfigBuilder;
 
 use std::convert::TryFrom;
 use std::path::Path;
@@ -68,26 +66,24 @@ pub fn init<F: Fn(String) + Send + Sync + 'static>(
         .expect("failed to set message receiver globally");
 }
 
+pub fn init_logger(config: LoggerConfigBuilder) {
+    logger_init(config.finish()).expect("failed to init logger");
+}
+
 pub async fn send_message(message: String) {
     let callback = MESSAGE_RECEIVER.get().unwrap();
-    if let Some(actor) = WALLET_ACTOR.get() {
-        match dispatch(actor, message.clone()).await {
-            Ok(response) => {
-                if let Some(response) = response {
-                    callback(response);
-                }
-            }
-            Err(e) => {
-                callback(e);
+    let actor = WALLET_ACTOR
+        .get()
+        .expect("runtime not initialized; send a `init` message before using the actor");
+    match dispatch(actor, message.clone()).await {
+        Ok(response) => {
+            if let Some(response) = response {
+                callback(response);
             }
         }
-    } else {
-        callback(
-            serde_json::to_string(&ResponseType::Error(WalletError::UnknownError(
-                "runtime not initialized; send a `init` message before using the actor".to_string(),
-            )))
-            .unwrap(),
-        );
+        Err(e) => {
+            callback(e);
+        }
     }
 }
 

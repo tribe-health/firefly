@@ -23,6 +23,7 @@ import {
   reattach as _reattach
 } from '../../api-wrapper/message'
 import {
+  LoggerConfig,
   backup as _backup,
   restoreBackup as _restoreBackup,
   setStrongholdPassword as _setStrongholdPassword,
@@ -41,7 +42,6 @@ function _poll(runtime: typeof addon.ActorSystem, cb: (error: string, data: any)
 }
 
 function sendMessage(message: BridgeMessage): Promise<string> {
-  // TODO secure RNG?
   const id = message.id;
 
   return new Promise(resolve => addon.sendMessage(JSON.stringify(message), () => resolve(id)))
@@ -58,6 +58,10 @@ export function init(storagePath?: string) {
 
 export function onMessage(cb: (payload: any) => void) {
   onMessageListeners.push(cb)
+}
+
+export function initLogger(config: LoggerConfig) {
+  addon.initLogger(JSON.stringify(config))
 }
 
 export const api = {
@@ -103,8 +107,8 @@ export const api = {
   backup: function (destinationPath: string): ((__id: string) => Promise<string>) {
     return (__id: string) => _backup(sendMessage, __id, destinationPath)
   },
-  restoreBackup: function (backupPath: string): ((__id: string) => Promise<string>) {
-    return (__id: string) => _restoreBackup(sendMessage, __id, backupPath)
+  restoreBackup: function (backupPath: string, password: string): ((__id: string) => Promise<string>) {
+    return (__id: string) => _restoreBackup(sendMessage, __id, backupPath, password)
   },
   setStrongholdPassword: function (password: string): ((__id: string) => Promise<string>) {
     return (__id: string) => _setStrongholdPassword(sendMessage, __id, password)

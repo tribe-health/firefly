@@ -1,5 +1,6 @@
 <script lang="typescript">
     import { onMount } from 'svelte'
+    import { fetchMarketData } from 'shared/lib/marketData'
     import { setupI18n, isLocaleLoaded, dir, _ } from 'shared/lib/i18n'
     import { darkMode, mobile, logged } from 'shared/lib/app'
     import { goto } from 'shared/lib/helpers'
@@ -10,7 +11,7 @@
         Welcome,
         Legal,
         Setup,
-        Settings,
+        Language,
         Password,
         Protect,
         Backup,
@@ -20,21 +21,19 @@
         Congratulations,
         Dashboard,
     } from 'shared/routes'
-
     $: $darkMode ? document.body.classList.add('scheme-dark') : document.body.classList.remove('scheme-dark')
-
     $: if (document.dir !== $dir) {
         document.dir = $dir
     }
-
     let splash = true
-
     setupI18n()
-    onMount(() => {
+    onMount(async() => {
         setTimeout(() => {
             splash = false
             initRouter()
         }, 2000)
+
+        await fetchMarketData()
     })
 </script>
 
@@ -43,7 +42,6 @@
     @tailwind components;
     @tailwind utilities;
     @import '../shared/style/style.scss';
-
     // dummy toggles
     .dummy-toggles {
         position: absolute;
@@ -62,13 +60,18 @@
             color: var(--button-text-color);
         }
     }
+    html,
+    body {
+        @apply bg-white;
+        &.scheme-dark {
+            @apply bg-blue-900;
+        }
+    }
 </style>
 
 <!-- empty div to avoid auto-purge removing dark classes -->
 <div class="scheme-dark" />
-{#if !$isLocaleLoaded || splash}
-    <Splash />
-{:else}
+{#if true}
     <!-- dummy toggles -->
     <div class="dummy-toggles flex flex-row">
         <div class="mr-4">
@@ -83,8 +86,8 @@
     <Route route={AppRoute.Legal}>
         <Legal on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
     </Route>
-    <Route route={AppRoute.Settings}>
-        <Settings on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
+    <Route route={AppRoute.Language}>
+        <Language on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
     </Route>
     <Route route={AppRoute.Setup}>
         <Setup on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
@@ -92,10 +95,10 @@
     <Route route={AppRoute.Password}>
         <Password on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
     </Route>
-    <Route route={AppRoute.Protect}>
+    <Route route={AppRoute.Protect} transition={false}>
         <Protect on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
     </Route>
-    <Route route={AppRoute.Backup}>
+    <Route route={AppRoute.Backup} transition={false}>
         <Backup
             on:next={routerNext}
             on:previous={routerPrevious}
@@ -103,7 +106,7 @@
             mobile={$mobile}
             locale={$_} />
     </Route>
-    <Route route={AppRoute.Import}>
+    <Route route={AppRoute.Import} transition={false}>
         <Import on:next={routerNext} on:previous={routerPrevious} mobile={$mobile} locale={$_} />
     </Route>
     <Route route={AppRoute.Balance}>
