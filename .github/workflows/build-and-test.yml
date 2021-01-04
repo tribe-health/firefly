@@ -37,11 +37,13 @@ jobs:
         run: yarn
         working-directory: packages/backend/bindings/node
         env:
-          CARGO_NET_GIT_FETCH_WITH_CLI: true
+          SKIP_POSTINSTALL: 1
 
       - name: Run tests
         run: yarn test
         working-directory: packages/backend/bindings/node
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: true
         
       
   frontend-desktop:
