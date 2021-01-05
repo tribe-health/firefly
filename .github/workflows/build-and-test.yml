@@ -14,11 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Git auth
-        run: git config --global url."https://token:$PAT@github.com/iotaledger/actors.rs".insteadOf "https://github.com/iotaledger/actors.rs"
-        env:
-          PAT: ${{ secrets.PAT }}
-
       - uses: actions/checkout@v2
 
       - name: Set up Node.js
@@ -50,11 +45,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Git auth
-      run: git config --global url."https://token:$PAT@github.com/iotaledger/actors.rs".insteadOf "https://github.com/iotaledger/actors.rs"
-      env:
-        PAT: ${{ secrets.PAT }}
-
     - uses: actions/checkout@v2
 
     - name: Set up Node.js
