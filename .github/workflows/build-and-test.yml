@@ -70,12 +70,24 @@ jobs:
         echo "::set-output name=dir::$(yarn cache dir)"
         echo "::set-output name=version::$(basename $(yarn cache dir))"
 
-    - uses: actions/cache@v2
+    - name: Cache Yarn dependencies
+      uses: actions/cache@v2
       with:
         path: ${{ steps.yarn-cache.outputs.dir }}
         key: firefly-yarn-${{ steps.yarn-cache.outputs.version }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           firefly-yarn-${{ steps.yarn-cache.outputs.version }}-${{ runner.os }}-
+    
+    - name: Cache cargo target
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{ github.workspace }}/packages/backend/bindings/node/native/target
+          ${{ github.workspace }}/packages/backend/bindings/node/native/artifacts.json
+        key: firefly-cargo-build-target-backend-bindings-${{ hashFiles(format('{0}{1}', github.workspace, '/packages/backend/bindings/node/native/Cargo.lock')) }}
+        restore-keys: |
+          firefly-cargo-build-target-backend-bindings-
+
     
     - name: Install dependencies
       run: yarn
