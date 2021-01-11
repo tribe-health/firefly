@@ -10,35 +10,35 @@ on:
       - develop
 
 jobs:
-  backend-node:
-    runs-on: ubuntu-latest
+  # backend-node:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 14.x
       
-      - name: Install Rust stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
+  #     - name: Install Rust stable toolchain
+  #       uses: actions-rs/toolchain@v1
+  #       with:
+  #         toolchain: stable
+  #         override: true
+  #         profile: minimal
 
-      - name: Build Node.js bindings
-        run: yarn
-        working-directory: packages/backend/bindings/node
-        env:
-          SKIP_POSTINSTALL: 1
+  #     - name: Build Node.js bindings
+  #       run: yarn
+  #       working-directory: packages/backend/bindings/node
+  #       env:
+  #         SKIP_POSTINSTALL: 1
 
-      - name: Run tests
-        run: yarn test
-        working-directory: packages/backend/bindings/node
-        env:
-          CARGO_NET_GIT_FETCH_WITH_CLI: true
+  #     - name: Run tests
+  #       run: yarn test
+  #       working-directory: packages/backend/bindings/node
+  #       env:
+  #         CARGO_NET_GIT_FETCH_WITH_CLI: true
         
       
   frontend-desktop:
