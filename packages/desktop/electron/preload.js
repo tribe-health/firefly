@@ -1,6 +1,6 @@
 const binding = require('wallet-nodejs-binding')
-
-binding.init()
+const PincodeManager = require('../libs/pincodeManager');
+const { remote } = require('electron')
 
 const freezeObjectFactory = (obj) => {
     const rejector = {
@@ -20,3 +20,17 @@ const freezeObjectFactory = (obj) => {
 }
 
 window.__WALLET__ = freezeObjectFactory(binding)
+
+window.Electron = {
+    PincodeManager,
+    getStrongholdBackupDestination: () => {
+        return remote.dialog.showOpenDialog({ properties: ['openDirectory'] }).then((result) => {
+            if (result.canceled) {
+                return null
+            }
+
+            return result.filePaths[0]
+        })
+    }
+
+};

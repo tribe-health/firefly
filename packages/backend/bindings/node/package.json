@@ -16,7 +16,7 @@
     "build": "npm-run-all -p build:api build:binding",
     "build:binding": "electron-build-env -- yarn neon build --release",
     "build:api": "rimraf ./index.js && rollup -c --silent && yarn generate-declaration",
-    "generate-declaration": "tsc index.ts --declaration --emitDeclarationOnly --outDir dist && mv dist/bindings/node/index.d.ts dist/index.d.ts",
+    "generate-declaration": "tsc index.ts --declaration --emitDeclarationOnly --outDir dist && move-file dist/bindings/node/index.d.ts dist/index.d.ts && replace --silent '\\.\\.\\/\\.\\.' '.' dist/index.d.ts",
     "test": "mocha --timeout 0"
   },
   "devDependencies": {
@@ -28,6 +28,8 @@
     "@rollup/plugin-node-resolve": "9.0.0",
     "@rollup/plugin-sucrase": "^3.1.0",
     "mocha": "^8.0.1",
+    "move-file-cli": "^2.0.0",
+    "replace": "^1.2.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "rollup": "2.28.1",

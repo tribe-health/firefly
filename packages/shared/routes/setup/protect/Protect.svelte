@@ -1,15 +1,22 @@
 <script lang="typescript">
     import { createEventDispatcher } from 'svelte'
     import { Transition } from 'shared/components'
+    import { api } from 'shared/lib/wallet'
+    import { getActiveProfile } from 'shared/lib/app'
+
     import { Protect, Pin } from './views/'
+    import { validatePinFormat } from 'shared/lib/utils'
+
     export let locale
     export let mobile
+
+    const PincodeManager = window['Electron']['PincodeManager']
 
     enum ProtectState {
         Init = 'init',
         Biometric = 'biometric',
         Pin = 'pin',
-        Confirm = 'confirm',
+        Confirm = 'confirm'
     }
 
     const dispatch = createEventDispatcher()
@@ -27,7 +34,7 @@
             break
     }
 
-    const _next = (event) => {
+    const _next = async (event) => {
         let nextState
         let params = event.detail || {}
         switch (state) {
@@ -45,8 +52,27 @@
                 nextState = ProtectState.Confirm
                 break
             case ProtectState.Confirm:
-                dispatch('next', { pin })
-                break
+                try {
+                    if (!validatePinFormat(pin.toString())) {
+                        throw new Error("Invalid pin code!");
+                    }
+                    await PincodeManager.set(
+                        getActiveProfile().id,
+                        pin.toString()
+                    )
+
+                    api.setStoragePassword(pin.toString(), {
+                        onSuccess() {
+                            dispatch('next', { pin })
+                        },
+                        onError(error) {
+                            console.error(error)
+                        }
+                    })
+                    break
+                } catch (error) {
+                    console.error(error)
+                }
         }
         if (nextState) {
             stateHistory.push(state)
