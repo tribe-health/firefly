@@ -65,8 +65,6 @@ jobs:
     
     - name: Install dependencies
       run: yarn
-      env: 
-          CARGO_NET_GIT_FETCH_WITH_CLI: true
       
     - name: Bundle desktop JS
       run: yarn build
