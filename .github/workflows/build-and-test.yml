@@ -1,71 +1,70 @@
-name: Build and run tests
+# name: Build and run tests
 
-on:
-  push:
-    branches:
-      - develop
-      - feature/ci
-  pull_request:
-    branches:
-      - develop
+# on:
+#   push:
+#     branches:
+#       - develop
+#   pull_request:
+#     branches:
+#       - develop
 
-jobs:
-  # backend-node:
-  #   runs-on: ubuntu-latest
+# jobs:
+#   backend-node:
+#     runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+#     steps:
+#       - uses: actions/checkout@v2
 
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 14.x
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: 14.x
       
-  #     - name: Install Rust stable toolchain
-  #       uses: actions-rs/toolchain@v1
-  #       with:
-  #         toolchain: stable
-  #         override: true
-  #         profile: minimal
+#       - name: Install Rust stable toolchain
+#         uses: actions-rs/toolchain@v1
+#         with:
+#           toolchain: stable
+#           override: true
+#           profile: minimal
 
-  #     - name: Build Node.js bindings
-  #       run: yarn
-  #       working-directory: packages/backend/bindings/node
-  #       env:
-  #         SKIP_POSTINSTALL: 1
+#       - name: Build Node.js bindings
+#         run: yarn
+#         working-directory: packages/backend/bindings/node
+#         env:
+#           SKIP_POSTINSTALL: 1
 
-  #     - name: Run tests
-  #       run: yarn test
-  #       working-directory: packages/backend/bindings/node
-  #       env:
-  #         CARGO_NET_GIT_FETCH_WITH_CLI: true
+#       - name: Run tests
+#         run: yarn test
+#         working-directory: packages/backend/bindings/node
+#         env:
+#           CARGO_NET_GIT_FETCH_WITH_CLI: true
         
       
-  frontend-desktop:
-    runs-on: ubuntu-latest
+#   frontend-desktop:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
+#     steps:
+#     - uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: 12.x
     
-    - name: Install Rust stable toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+#     - name: Install Rust stable toolchain
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         toolchain: stable
+#         override: true
       
-    - name: Install required packages
-      run: |
-        sudo apt update
-        sudo apt install gcc-multilib g++-multilib build-essential
+#     - name: Install required packages
+#       run: |
+#         sudo apt update
+#         sudo apt install gcc-multilib g++-multilib build-essential
     
-    - name: Install dependencies
-      run: yarn
+#     - name: Install dependencies
+#       run: yarn
       
-    - name: Bundle desktop JS
-      run: yarn build
-      working-directory: packages/desktop
+#     - name: Bundle desktop JS
+#       run: yarn build
+#       working-directory: packages/desktop
