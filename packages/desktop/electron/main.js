@@ -89,7 +89,7 @@ function createWindow() {
             disableBlinkFeatures: 'Auxclick',
             webviewTag: false,
             enableWebSQL: false,
-            devTools: devMode,
+            // devTools: devMode,
             preload: paths.preload,
         },
     })
