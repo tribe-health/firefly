@@ -169,7 +169,7 @@ export async function fetchMarketData(): Promise<void> {
 
             const marketData: MarketData = await response.json()
 
-            const { isValid, error } = new Validator().performValidation({
+            const { isValid, payload } = new Validator().performValidation({
                 type: 'MarketData',
                 payload: marketData,
             })
@@ -200,7 +200,7 @@ export async function fetchMarketData(): Promise<void> {
                 addProfileCurrencyPriceData()
 
             } else {
-                throw new Error(error.error)
+                throw new Error(payload.error)
             }
             break
         } catch (err) {
