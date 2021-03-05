@@ -2,7 +2,7 @@
     import { bindEvents } from 'shared/lib/utils'
     import { Icon } from 'shared/components'
     export let events = {}
-    export let onClick = () => ''
+    export let onClick: () => void = () => ''
     export let secondary = false
     export let disabled = false
     export let warning = false
@@ -125,11 +125,11 @@
             }
         }
         &.small {
-            @apply p-2.5;
+            @apply p-2\.5;
             @apply rounded-lg;
             min-width: 78px;
             &.with-icon {
-                @apply p-2.5;
+                @apply p-2\.5;
                 @apply text-white;
                 span {
                     @apply ml-0;

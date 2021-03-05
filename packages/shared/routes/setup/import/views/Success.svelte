@@ -1,10 +1,9 @@
 <script lang="typescript">
+    import { Button, OnboardingLayout, Text } from 'shared/components'
     import { createEventDispatcher } from 'svelte'
-    import { OnboardingLayout, Text, Button, Icon } from 'shared/components'
 
     export let locale
     export let mobile
-    export let importType
 
     const dispatch = createEventDispatcher()
 

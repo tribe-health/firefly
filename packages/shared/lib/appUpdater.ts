@@ -45,7 +45,7 @@ Electron.onEvent('version-error', (nativeVersionError) => {
     updateError.set(true)
 })
 
-export function updateDownload(): void {
+export async function updateDownload(): Promise<void> {
     updateProgress.set(0)
     updateMinutesRemaining.set(-1)
     updateBusy.set(true)
@@ -54,17 +54,13 @@ export function updateDownload(): void {
 
     const locale = get(_) as (string, values?) => string
 
-    let progressSubscription;
-    let minutesRemainingSubscription;
-    let completeSubscription;
-    let errorSubscription;
+    const subscriptions: { [id: string]: () => void } = {}
 
     const cleanup = () => {
         removeDisplayNotification(notificationId)
-        progressSubscription();
-        completeSubscription();
-        errorSubscription();
-        minutesRemainingSubscription();
+        for (const sub in subscriptions) {
+            subscriptions[sub]();
+        }
     }
 
     const downloadingNotification: NotificationData = {
@@ -75,8 +71,8 @@ export function updateDownload(): void {
         actions: [
             {
                 label: locale('actions.cancel'),
-                callback: () => {
-                    updateCancel()
+                callback: async () => {
+                    await updateCancel()
                     cleanup();
                 }
             }
@@ -86,11 +82,11 @@ export function updateDownload(): void {
 
     const notificationId = showAppNotification(downloadingNotification)
 
-    progressSubscription = updateProgress.subscribe(progress => {
+    subscriptions.progress = updateProgress.subscribe(progress => {
         updateDisplayNotificationProgress(notificationId, progress);
     });
 
-    minutesRemainingSubscription = updateMinutesRemaining.subscribe(minutesRemaining => {
+    subscriptions.minutesRemaining = updateMinutesRemaining.subscribe(minutesRemaining => {
         if (minutesRemaining > 0) {
             updateDisplayNotification(notificationId, {
                 ...downloadingNotification,
@@ -106,7 +102,7 @@ export function updateDownload(): void {
         }
     });
 
-    completeSubscription = updateComplete.subscribe((isComplete) => {
+    subscriptions.complete = updateComplete.subscribe((isComplete) => {
         if (isComplete) {
             updateDisplayNotification(
                 notificationId,
@@ -118,9 +114,9 @@ export function updateDownload(): void {
                     actions: [
                         {
                             label: locale('actions.restart_now'),
-                            callback: () => {
+                            callback: async () => {
                                 cleanup()
-                                updateInstall()
+                                await updateInstall()
                             },
                             isPrimary: true
                         },
@@ -133,7 +129,7 @@ export function updateDownload(): void {
         }
     });
 
-    errorSubscription = updateError.subscribe((isError) => {
+    subscriptions.error = updateError.subscribe((isError) => {
         if (isError) {
             updateDisplayNotification(
                 notificationId,
@@ -152,11 +148,11 @@ export function updateDownload(): void {
         }
     });
 
-    Electron.updateDownload()
+    await Electron.updateDownload()
 }
 
-export function updateCancel(): void {
-    Electron.updateCancel()
+export async function updateCancel(): Promise<void> {
+    await Electron.updateCancel()
     updateProgress.set(0)
     updateBusy.set(false)
     updateComplete.set(false)
@@ -164,8 +160,8 @@ export function updateCancel(): void {
     updateMinutesRemaining.set(-1)
 }
 
-export function updateInstall(): void {
-    Electron.updateInstall()
+export async function updateInstall(): Promise<void> {
+    await Electron.updateInstall()
 }
 
 export async function refreshVersionDetails(): Promise<void> {

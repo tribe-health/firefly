@@ -8,7 +8,7 @@
 
     const dispatch = createEventDispatcher()
 
-    function handleContinueClick(id) {
+    function handleContinueClick(id: string) {
         setActiveProfile(id)
         dispatch('next')
     }

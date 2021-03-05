@@ -12,7 +12,7 @@
     const dispatch = createEventDispatcher()
 
     $: confirmInput = pinCandidate !== null
-    $: valid = !!pinCandidate
+    $: valid = pinCandidate
         ? validatePinFormat(pinInput) && pinInput === pinCandidate
         : validatePinFormat(pinInput)
 

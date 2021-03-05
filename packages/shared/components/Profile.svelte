@@ -8,7 +8,7 @@
     export let name = ''
     export let id = ''
     export let isDeveloper = false
-    export let onClick = () => ''
+    export let onClick: (id: string) => void = (_) => ''
     export let bgColor
 
     let slots = $$props.$$slots

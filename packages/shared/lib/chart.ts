@@ -100,19 +100,23 @@ export function getAccountValueData(balanceHistory: BalanceHistory): ChartData {
     return chartData
 }
 
-export const getAccountActivityData = (account: WalletAccount) => {
+export const getAccountActivityData = (account: WalletAccount): {
+    incoming: ChartData;
+    outgoing: ChartData;
+    labels: string[];
+} => {
     const locale = get(_) as (string, values?) => string
-    let now = new Date();
-    let activityTimeframes: ActivityTimeframe[] = []
-    let incoming: ChartData = { data: [], tooltips: [], label: locale('general.incoming'), color: account.color || 'blue' } // TODO: profile colors
-    let outgoing: ChartData = { data: [], tooltips: [], label: locale('general.outgoing'), color: 'gray' } // TODO: profile colors
-    let labels: string[] = []
-    let messages: Message[] = account.messages.slice().sort((a, b) => {
-        return <any>new Date(a.timestamp).getTime() - <any>new Date(b.timestamp).getTime()
+    const now = new Date();
+    const activityTimeframes: ActivityTimeframe[] = []
+    const incoming: ChartData = { data: [], tooltips: [], label: locale('general.incoming'), color: account.color || 'blue' } // TODO: profile colors
+    const outgoing: ChartData = { data: [], tooltips: [], label: locale('general.outgoing'), color: 'gray' } // TODO: profile colors
+    const labels: string[] = []
+    const messages: Message[] = account.messages.slice().sort((a, b) => {
+        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     })
-    for (var i = 0; i < BAR_CHART_ACTIVITY_MONTHS; i++) {
-        let start: number = new Date(now.getFullYear(), now.getMonth() - i, 1).getTime();
-        let end: number = new Date(now.getFullYear(), now.getMonth() - i + 1, 0).getTime();
+    for (let i = 0; i < BAR_CHART_ACTIVITY_MONTHS; i++) {
+        const start: number = new Date(now.getFullYear(), now.getMonth() - i, 1).getTime();
+        const end: number = new Date(now.getFullYear(), now.getMonth() - i + 1, 0).getTime();
         activityTimeframes.push({ start, end })
         labels.unshift(
             get(i18nDate)(new Date(start), { month: 'short' }))
@@ -164,7 +168,7 @@ export const getAccountActivityData = (account: WalletAccount) => {
         })
     }
     else {
-        activityTimeframes.forEach(({ start, end }) => {
+        activityTimeframes.forEach(({ start }) => {
             incoming.data.push(0)
             incoming.tooltips.unshift({
                 title: get(i18nDate)(new Date(start), {
@@ -189,7 +193,7 @@ export const getAccountActivityData = (account: WalletAccount) => {
             })
         })
     }
-    let chartData = {
+    const chartData = {
         incoming,
         outgoing,
         labels
@@ -199,7 +203,7 @@ export const getAccountActivityData = (account: WalletAccount) => {
 
 function formatLabel(timestamp: number): string {
     const date: Date = new Date(timestamp)
-    var formattedLabel: string = ''
+    let formattedLabel = ''
     switch (get(chartTimeframe)) {
         case HistoryDataProps.ONE_HOUR:
         case HistoryDataProps.TWENTY_FOUR_HOURS:
@@ -219,8 +223,8 @@ function formatLabel(timestamp: number): string {
     return formattedLabel
 }
 
-function formatLineChartTooltip(data: (number | string), timestamp: number | string, showMiota: boolean = false): Tooltip {
-    const title: string = `${showMiota ? `1 ${Unit.Mi}: ` : ''}${data} ${get(chartCurrency).toUpperCase()}`
+function formatLineChartTooltip(data: (number | string), timestamp: number | string, showMiota = false): Tooltip {
+    const title = `${showMiota ? `1 ${Unit.Mi}: ` : ''}${data} ${get(chartCurrency).toUpperCase()}`
     const label: string = get(i18nDate)(new Date(timestamp), {
         year: 'numeric',
         month: 'short',

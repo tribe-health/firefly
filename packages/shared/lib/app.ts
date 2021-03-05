@@ -58,7 +58,7 @@ export const developerMode = persistent<boolean>('developerMode', false)
 /**
  * Logout from current profile
  */
-export const logout = () => {
+export const logout = (): void => {
     destroyActor(get(activeProfile).id)
     resetWallet()
     resetRouter()

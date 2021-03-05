@@ -16,7 +16,7 @@ export const persistent = <T>(key: string, initialValue: T): Writable<T> => {
     try {
         const json = localStorage.getItem(key)
         if (json) {
-            value = JSON.parse(json)
+            value = JSON.parse(json) as T
         }
     } catch (err) {
         console.error(err)
@@ -34,7 +34,7 @@ export const persistent = <T>(key: string, initialValue: T): Writable<T> => {
 /**
  * Extract initials from string
  */
-export const getInitials = (string: string, maxChars: number) => {
+export const getInitials = (string: string, maxChars?: number): string => {
     let initialsArray = string.split(' ').map(n => n[0].toUpperCase())
     if (maxChars) {
         initialsArray = initialsArray.slice(0, maxChars)
@@ -51,7 +51,7 @@ export const getInitials = (string: string, maxChars: number) => {
  * @param dotCount: Count of dots in between first and end portion. Default = 3
  */
 
-export const truncateString = (str: string, firstCharCount: number = 5, endCharCount: number = 5, dotCount: number = 3) => {
+export const truncateString = (str: string, firstCharCount = 5, endCharCount = 5, dotCount = 3): string => {
     const MAX_LENGTH = 13
     if (str.length <= MAX_LENGTH) {
         return str
@@ -72,7 +72,7 @@ export const setClipboard = (input: string): boolean => {
         textArea.value = input
         document.body.appendChild(textArea)
 
-        if (navigator.userAgent.match(/ipad|iphone/i)) {
+        if (/ipad|iphone/i.test(navigator.userAgent)) {
             const range = document.createRange()
             range.selectNodeContents(textArea)
             const selection = window.getSelection()
@@ -98,7 +98,10 @@ export const setClipboard = (input: string): boolean => {
  * @param firstDate: first date to compare
  * @param secondDate: second sate to compare
  */
-export const diffDates = (firstDate: Date, secondDate: Date) => {
+export const diffDates = (firstDate: Date, secondDate: Date): {
+    unit: string;
+    value?: number;
+} => {
     if (!(firstDate instanceof Date) || !(secondDate instanceof Date)) {
         return null
     }
@@ -127,7 +130,10 @@ export const diffDates = (firstDate: Date, secondDate: Date) => {
  * Get if a date is considered "recent". Less than 1 month is considered recent.
  * @param date: date to know if recent or not, compared to today. Must be in the past.
  */
-export const isRecentDate = (date: Date) => {
+export const isRecentDate = (date: Date): {
+    lessThanAMonth: boolean;
+    lessThanThreeMonths: boolean;
+} => {
     if (!(date instanceof Date)) {
         return null
     }
@@ -145,7 +151,7 @@ export const isRecentDate = (date: Date) => {
  * Returns warning text color for last Stronghold backup
  * @param lastBackupDate: Blue if less than a month. Orange if less than three months. Red if more.
  */
-export const getBackupWarningColor = (lastBackupDate: Date) => {
+export const getBackupWarningColor = (lastBackupDate: Date) : string => {
     if (!(lastBackupDate instanceof Date)) {
         return 'red'
     }
@@ -159,7 +165,7 @@ export const getBackupWarningColor = (lastBackupDate: Date) => {
  * @param hexCode: hex color to convert
  * @param opacity: [0,100], default = 100
  */
-export const convertHexToRGBA = (hexCode: string, opacity: number = 100) => {
+export const convertHexToRGBA = (hexCode: string, opacity = 100): string => {
     let hex = hexCode.replace('#', '');
 
     if (hex.length === 3) {

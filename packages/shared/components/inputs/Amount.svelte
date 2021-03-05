@@ -1,10 +1,9 @@
 <script lang="typescript">
     import { Unit } from '@iota/unit-converter'
-    import { Text } from 'shared/components'
-    import Input from './Input'
+    import { Input, Text } from 'shared/components'
 
     export let amount = undefined
-    export let unit = Unit.Mi
+    export let unit: Unit = Unit.Mi
     export let label = undefined
     export let locale = undefined
     export let classes = ''

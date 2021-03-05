@@ -9,7 +9,7 @@
     export let sortItems = false
     export let items = []
     export let small = false
-    export let onSelect = () => {}
+    export let onSelect: (item) => void = () => {}
 
     let dropdown = false
 
@@ -53,7 +53,7 @@
         }
         &.small {
             min-height: 32px;
-            @apply py-2.5;
+            @apply py-2\.5;
             @apply pl-3;
             @apply pr-8;
             @apply rounded-lg;
